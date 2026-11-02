@@ -1,0 +1,6 @@
+:HL["/_next/static/chunks/363eyle5-9sgo.css","style"]
+:HL["/_next/static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+3:[["children",{"s":"__PAGE__","h":160}]]
+2:[["children",{"s":{"n":"competency","t":"d","k":"vi-e","s":[]},"h":65632,"c":"$Q3"}]]
+1:[["children",{"s":"learn","h":131168,"c":"$Q2"}]]
+0:{"b":"UAmgM4BlHJzW0znQeneZB","t":{"t":{"s":"","h":131152,"c":"$Q1"}}}
