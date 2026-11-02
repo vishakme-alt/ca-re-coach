@@ -1,0 +1,96 @@
+import { domains } from "@/content/curriculum";
+import { competencies } from "@/content/curriculum";
+import { questions as questionsBase } from "@/content/questions";
+import { topics as topicsAll, topicQuestions } from "@/content/topics-index";
+import { flashcards } from "@/content/flashcards";
+import { notes } from "@/content/notes";
+import type { Competency, Domain, DomainCode, Flashcard, Question, StudyNote, Topic } from "@/lib/types";
+
+// Bundled content is the source of truth . Synchronous accessors.
+
+// Combined bank (base + extra + topic-authored), de-duplicated by id.
+const questions: Question[] = (() => {
+  const seen = new Set<string>();
+  return [...questionsBase, ...topicQuestions].filter((q) => (seen.has(q.id) ? false : (seen.add(q.id), true)));
+})();
+
+// ── Topics (the learn→test spine of each competency) ──
+const questionToTopic: Map<string, Topic> = (() => {
+  const m = new Map<string, Topic>();
+  for (const t of topicsAll) for (const qid of t.questionIds) if (!m.has(qid)) m.set(qid, t);
+  return m;
+})();
+
+export function getTopics(): Topic[] {
+  return topicsAll;
+}
+
+export function getTopicsByCompetency(competencyId: string): Topic[] {
+  return topicsAll.filter((t) => t.competencyId === competencyId).sort((a, b) => a.sort - b.sort);
+}
+
+export function getTopicForQuestion(questionId: string): Topic | undefined {
+  return questionToTopic.get(questionId);
+}
+
+export function getDomains(): Domain[] {
+  return [...domains].sort((a, b) => a.sort - b.sort);
+}
+
+export function getDomain(idOrCode: string): Domain | undefined {
+  return domains.find((d) => d.id === idOrCode || d.code === idOrCode);
+}
+
+export function getCompetencies(): Competency[] {
+  // Order by exam area first, then by position within the area.
+  const areaSort = new Map(domains.map((d) => [d.id, d.sort]));
+  return [...competencies].sort((a, b) => (areaSort.get(a.domainId) ?? 0) - (areaSort.get(b.domainId) ?? 0) || a.sort - b.sort);
+}
+
+export function getCompetenciesByDomain(domainId: string): Competency[] {
+  return competencies.filter((c) => c.domainId === domainId).sort((a, b) => a.sort - b.sort);
+}
+
+export function getCompetency(id: string): Competency | undefined {
+  return competencies.find((c) => c.id === id);
+}
+
+export function getQuestions(): Question[] {
+  return questions;
+}
+
+export function getQuestionsByCompetency(competencyId: string): Question[] {
+  return questions.filter((q) => q.competencyId === competencyId);
+}
+
+export function getQuestion(id: string): Question | undefined {
+  return questions.find((q) => q.id === id);
+}
+
+export function getFlashcards(): Flashcard[] {
+  return flashcards;
+}
+
+export function getNotes(): StudyNote[] {
+  return [...notes].sort((a, b) => a.sort - b.sort);
+}
+
+export function getNotesByCompetency(competencyId: string): StudyNote[] {
+  return notes.filter((n) => n.competencyId === competencyId).sort((a, b) => a.sort - b.sort);
+}
+
+export function getStrategyNotes(): StudyNote[] {
+  return notes.filter((n) => n.competencyId === null);
+}
+
+// Map competencyId -> domainCode (used widely in scoring/readiness).
+export function competencyToDomainCode(competencyId: string): DomainCode | undefined {
+  const c = getCompetency(competencyId);
+  if (!c) return undefined;
+  return getDomain(c.domainId)?.code;
+}
+
+// Blueprint weight per competency = its max question count (natural exam weighting).
+export function competencyWeight(competencyId: string): number {
+  return getCompetency(competencyId)?.maxQ ?? 1;
+}

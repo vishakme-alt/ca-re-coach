@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f1f1f2;
+  --foreground: #17171a;
+  --muted: #6f6f78;
+  --border: #e5e5e8;
+
+  --primary: #16a34a;        /* focused green — single main accent */
+  --primary-shade: #15803d;
+  --primary-fg: #ffffff;
+  --accent: #2563eb;         /* blue for secondary actions/links */
+  --accent-shade: #1d4ed8;
+  --gold: #d97706;           /* points/highlights, muted amber */
+  --streak: #ea580c;
+  --danger: #dc2626;
+  --danger-shade: #b91c1c;
+  --success: #16a34a;
+  --warning: #d97706;
+  --ring: #16a34a;
+  --radius: 12px;
+}
+
+.dark {
+  --background: #0e0e10;
+  --surface: #161619;
+  --surface-2: #1f1f23;
+  --foreground: #ededf0;
+  --muted: #9a9aa4;
+  --border: #2a2a2f;
+
+  --primary: #22c55e;
+  --primary-shade: #16a34a;
+  --primary-fg: #0b0f0c;
+  --accent: #3b82f6;
+  --accent-shade: #2563eb;
+  --gold: #f59e0b;
+  --streak: #fb923c;
+  --danger: #ef4444;
+  --danger-shade: #dc2626;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --ring: #22c55e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-accent: var(--accent);
+  --color-gold: var(--gold);
+  --color-streak: var(--streak);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-ring: var(--ring);
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .press {
+    transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  }
+  .press:active:not(:disabled) {
+    transform: scale(0.975);
+  }
+}
+
+/* Legacy hook kept for compatibility — now a flat, calm button */
+.btn3d {
+  transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, transform 0.1s ease;
+}
+.btn3d:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+/* ── Elevation scale ── */
+:root {
+  --e1: 0 1px 2px rgba(16, 24, 16, 0.05);
+  --e2: 0 2px 8px rgba(16, 24, 16, 0.07), 0 1px 2px rgba(16, 24, 16, 0.05);
+  --e3: 0 8px 28px rgba(16, 24, 16, 0.11), 0 2px 8px rgba(16, 24, 16, 0.06);
+}
+.dark {
+  --e1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --e2: 0 2px 10px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.02);
+  --e3: 0 10px 34px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+/* Card hover lift — transform+shadow only, no layout shift */
+.liftable {
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1), border-color 0.2s ease;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .liftable:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--e3);
+  }
+}
+
+/* Glass chrome for sticky bars */
+.glass {
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+}
+
+/* Hero mesh — quiet ambient color, both themes */
+.mesh {
+  background:
+    radial-gradient(46rem 22rem at 8% -30%, color-mix(in srgb, var(--primary) 13%, transparent), transparent 60%),
+    radial-gradient(38rem 20rem at 96% -18%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 62%),
+    var(--surface);
+}
+
+/* Answer feedback */
+@keyframes shake-x {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  45% { transform: translateX(4px); }
+  70% { transform: translateX(-3px); }
+  88% { transform: translateX(2px); }
+}
+@keyframes pop-in {
+  0% { transform: scale(0.6); opacity: 0.4; }
+  60% { transform: scale(1.12); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .anim-shake { animation: shake-x 0.36s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+  .anim-pop { animation: pop-in 0.28s cubic-bezier(0.2, 0, 0, 1); }
+}
+
+/* Streak flame idle pulse */
+@keyframes flame-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .anim-flame { animation: flame-pulse 2.4s ease-in-out infinite; transform-origin: 50% 80%; }
+}
+
+.prose-note h3 { font-weight: 700; margin-top: 1.15em; margin-bottom: 0.35em; font-size: 1rem; }
+.prose-note p { margin: 0.55em 0; line-height: 1.7; }
+.prose-note ul { margin: 0.55em 0; padding-left: 1.25em; list-style: disc; }
+.prose-note li { margin: 0.28em 0; line-height: 1.65; }
+.prose-note strong { font-weight: 700; }
+.prose-note code { background: var(--surface-2); padding: 0.1em 0.35em; border-radius: 6px; font-size: 0.88em; font-family: ui-monospace, monospace; }
+.prose-note a { color: var(--accent); text-decoration: underline; }
